@@ -51,3 +51,12 @@ class TestTweetViews(TestCase):
         db.session.commit()
         self.client.delete("/tweets/1")
         self.assertIsNone(db.session.query(Tweet).get(1))
+
+    def test_tweet_get_many(self):
+        first_tweet = Tweet(text="First tweet")
+        db.session.add(first_tweet)
+        db.session.commit()
+
+        tweets = db.session.query(Tweet).all()
+        self.assertEqual(type(tweets), list)
+        self.assertEqual(len(tweets), 1)

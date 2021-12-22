@@ -14,9 +14,9 @@ json_new_tweet = api.model('New tweet', {
     'text': fields.String(required=True, min_length=1),  # Don't allow empty string
 })
 
-@api.route('/<int:tweet_id>')  # route extension (ie: /tweets/<int:id>)
+@api.route('/<int:id>')  # route extension (ie: /tweets/<int:id>)
 @api.response(404, 'Tweet not found')
-@api.param('tweet_id', 'The tweet unique identifier')
+@api.param('id', 'The tweet unique identifier')
 class TweetResource(Resource):
     @api.marshal_with(json_tweet)
     def get(self, id):
@@ -60,3 +60,8 @@ class TweetsResource(Resource):
             return tweet, 201
         else:
             return abort(422, "Tweet text can't be empty")
+
+    @api.marshal_with(json_tweet)
+    def get(self):
+        tweets = db.session.query(Tweet).all()
+        return tweets
